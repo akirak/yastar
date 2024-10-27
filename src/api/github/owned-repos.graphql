@@ -1,0 +1,29 @@
+query StarredOwnReposQuery($after: String) {
+  viewer {
+    login
+    repositories(
+      affiliations: OWNER,
+      visibility: PUBLIC,
+      first: 20,
+      after: $after,
+      orderBy: {field: STARGAZERS, direction: DESC}
+    ) {
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+      nodes {
+        name
+        id
+        owner {
+          __typename
+          login
+        }
+        stargazerCount
+        primaryLanguage {
+          name
+        }
+      }
+    }
+  }
+}

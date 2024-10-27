@@ -1,0 +1,17 @@
+query StargazersQuery($owner: String!, $name: String!, $count: Int!, $before: String) { 
+  repository(owner: $owner, name: $name) {
+    stargazers(last: $count, before: $before) {
+      totalCount
+      pageInfo {
+        startCursor
+        hasPreviousPage
+      }
+      edges {
+        starredAt
+        node {
+          login
+        }
+      }
+    }
+  }
+}

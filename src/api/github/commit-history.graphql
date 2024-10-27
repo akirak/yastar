@@ -1,0 +1,26 @@
+query CommitHistoryQuery($owner: String!, $name: String!, $after: String) { 
+  repository(owner: $owner, name: $name) {
+    defaultBranchRef {
+      target {
+        __typename
+        ... on Commit {
+          history(first: 20, after: $after) {
+            pageInfo {
+              startCursor
+              endCursor
+              hasNextPage
+            }
+            nodes {
+              author {
+                user {
+                  login
+                }
+              }
+              committedDate
+            }
+          }
+        }
+      }
+    }
+  }
+}

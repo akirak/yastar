@@ -1,0 +1,14 @@
+/target
+
+# local
+*.local
+
+# environment variables
+.env
+
+# direnv
+.envrc
+
+# test database
+*.db
+*.wal
