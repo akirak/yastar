@@ -21,4 +21,4 @@ jobs:
       - name: Check format
         run: |
           system="$(nix eval --expr builtins.currentSystem --impure --raw)"
-          nix build ".#checks.$system.formatter"
+          nix build ".#checks.$system.treefmt"
