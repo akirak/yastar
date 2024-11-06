@@ -1,7 +1,7 @@
 # YAStar: GitHub Star History for Your GitHub Profile
 
-YAStar (Yet Another Star History) is a program that collect data from your
-GitHub account and generate charts. It renders a line chart of stargazers given
+YAStar (Yet Another Star History) is a program that collects data from your
+GitHub account and generates charts. It renders a line chart of stargazers given
 to your public, owned, original repositories, optionally grouped by primary
 language. See examples:
 
