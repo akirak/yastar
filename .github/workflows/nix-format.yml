@@ -21,4 +21,4 @@ jobs:
       - name: Check format
         run: |
           system="$(nix eval --expr builtins.currentSystem --impure --raw)"
-          nix build ".#checks.$system.formatting"
+          nix build ".#checks.$system.formatter"
