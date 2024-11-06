@@ -79,6 +79,18 @@
             }
           );
 
+          # A self-contained updater for CI where just is not available by
+          # default.
+          packages.update-data = pkgs.writeShellApplication {
+            name = "update-data";
+            runtimeInputs = [
+              pkgs.just
+            ];
+            text = ''
+              just -f ${./justfile} update
+            '';
+          };
+
           devShells.default = craneLib.devShell {
             packages = commonArgs.nativeBuildInputs ++ commonArgs.buildInputs;
           };

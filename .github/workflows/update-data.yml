@@ -1,0 +1,19 @@
+name: Update the data
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '20 7 3 * *'
+jobs:
+  build:
+    strategy:
+      matrix:
+        os:
+          - ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@V27
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - run: nix run .#update-data
