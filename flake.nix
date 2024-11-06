@@ -92,7 +92,10 @@
           };
 
           devShells.default = craneLib.devShell {
-            packages = commonArgs.nativeBuildInputs ++ commonArgs.buildInputs;
+            packages =
+              commonArgs.nativeBuildInputs ++ commonArgs.buildInputs ++ [ pkgs.rust-analyzer-unwrapped ];
+
+            RUST_SRC_PATH = "${pkgs.rust-bin.stable.latest.rust-src}/lib/rustlib/src/rust/library";
           };
 
           treefmt = {
