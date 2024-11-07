@@ -1,9 +1,9 @@
 # YAStar: GitHub Star History for Your GitHub Profile
 
 YAStar (Yet Another Star History) is a program that collects data from your
-GitHub account and generates charts. It renders a line chart of stargazers given
-to your public, owned, and original repositories, optionally grouped by primary
-language. See examples:
+GitHub account and generates charts. It renders a stargazer history of your
+public original repositories, optionally grouped by primary language. See
+examples:
 
 ![Number of stargazers by language](./doc/images/language.svg)
 ![Total number of stargazers](./doc/images/total.svg)
@@ -13,9 +13,10 @@ It's not fancy, but it provides **useful insights on your expertise**.
 It is a command-line program that is designed to be run on CI. With a small
 setup, you can add the generated image to your GitHub readme.
 
-**This program produces a [DuckDB](https://duckdb.org/) database.** You can use
-YAStar to fetch your account data and then write your own script to produce
-other presentations such as charts, tables, etc. for your slides and articles.
+**This program produces a [DuckDB](https://duckdb.org/) database.** If you don't
+like the charts produced by it, you can **use this program to fetch your account
+data and then write your own scripts** to produce presentations such as charts,
+tables, etc. for your slides and articles.
 
 **DISCLAIMER: This project has nothing to do with YaST, a configuration tool for
 openSUSE and SUSE operating systems.**
@@ -24,31 +25,39 @@ openSUSE and SUSE operating systems.**
 
 As far as I know, this program is not packaged for any operating system yet.
 
-It is a Rust application, so you can build the package using `cargo`:
+### Nix
+
+Run the program directly:
+
+``` shell
+nix run github:akirak/yastar -- [ARGS]
+```
+
+or add the default flake package to your NixOS/home-manager configuration.
+
+A binary cache is provided from `https://akirak.cachix.org`.
+
+### Building from source
+
+It is a Rust application, so you can build the package using `cargo`.
+
+You need DuckDB as a dependency.
 
 ``` shell
 cargo install
 ```
-
-It is also a Nix flake, so you can run the application directly without
-installation:
-
-``` shell
-nix run github:akirak/yastar
-```
-
 ## Configuration
 To use the program, you have to set the following environment variables:
 
-- `GITHUB_API_TOKEN`: Personal access token (PAT) for your GitHub account. You
-  can [generate a new one](https://github.com/settings/tokens?type=beta) on
-  settings. It is sufficient to use a fine-grained PAT with read-only access to
-  public repositories.
-- `DUCKDB_DATABASE`: Path to a DuckDB database file. If the file doesn't exist,
-  a new one will be created.
+- `GITHUB_API_TOKEN`: Personal access token (PAT) for retrieving data. You can
+  [generate a new one](https://github.com/settings/tokens?type=beta) on your
+  GitHub account. It is sufficient to use a fine-grained PAT with read-only
+  access to public repositories.
+- `DUCKDB_DATABASE`: Path to a database file of DuckDB. If the file doesn't
+  exist, a new one will be created.
 
 This program also supports `.env`, so you can set the environment variables in
-`.env` file in the running directory instead of setting them inside your shell.
+`.env` file instead of setting them inside your shell.
 
 ## Usage
 
@@ -83,11 +92,11 @@ yastar chart --help
 
 ### CI
 
-**This program is heavy on API usage.** To prevent from hitting the API limit of
-GitHub and also reduce the execution time, it is recommended to keep the
-database to an object storage and restore it on every CI run. YAStar tries to
-fetch only new activities, so you can save the usage by keeping the database
-file.
+**This program is heavy on API usage**, especially if you have repositories with
+thousands (or more) of commits. To prevent from hitting the API limit of GitHub
+and also reduce the execution time, it is recommended to keep the database to an
+object storage and restore it on every CI run. YAStar tries to fetch only new
+activities, so you can save the usage by keeping the database file.
 
 ## Technical Notes
 
@@ -103,6 +112,11 @@ authored by yourself.
   on your repositories. This is because the GitHub API returns activities of
   even removed stars.
 
+- Languages with a small number of stargazers are not rendered on the language
+  chart. The threshold is 10 stars at present.
+
 ## TODO
 
 [ ] Allow customization of the charts to make them more beautiful.
+[ ] Allow customization of the threshold.
+[ ] Add thorough documentation on CI setup.
