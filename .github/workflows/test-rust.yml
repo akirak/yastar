@@ -16,16 +16,15 @@ jobs:
   test:
     strategy:
       matrix:
-        os: [ubuntu-latest, windows-latest, macOS-latest]
+        os: [ubuntu-latest, macOS-latest]
         rust: [stable, nightly]
     runs-on: ${{ matrix.os }}
     steps:
-      - uses: hecrj/setup-rust-action@v2
-        with:
-          rust-version: ${{ matrix.rust }}
-      - uses: Swatinem/rust-cache@v2
       - uses: actions/checkout@v4
-      - run: cargo build
-      - run: cargo test --verbose
+      - uses: cachix/install-nix-action@V27
+        with:
+          extra_nix_config: |
+            access-tokens = github.com=${{ secrets.GITHUB_TOKEN }}
+      - run: nix develop -c cargo test --verbose
         env:
           DUCKDB_DATABASE: test.db
