@@ -1,20 +1,12 @@
+use anyhow::anyhow;
 use graphql_client::{reqwest::post_graphql, GraphQLQuery, Response};
 use reqwest::IntoUrl;
-use thiserror::Error;
 
 pub const GRAPHQL_ENDPOINT: &str = "https://api.github.com/graphql";
 
 pub struct GitHubClient<U> {
     client: reqwest::Client,
     endpoint: U,
-}
-
-#[derive(Error, Debug)]
-pub enum ApiResponseError {
-    #[error("The response has no data")]
-    NoData,
-    #[error("Missing expected node {0}")]
-    EmptyNode(String),
 }
 
 #[derive(GraphQLQuery)]
@@ -143,9 +135,9 @@ impl<U: IntoUrl + Copy> GitHubClient<U> {
 
         let stargazers = response
             .data
-            .ok_or(ApiResponseError::NoData)?
+            .ok_or(anyhow!("response has no data"))?
             .repository
-            .ok_or(ApiResponseError::EmptyNode(format!("repository")))?
+            .ok_or(anyhow!("missing repository field"))?
             .stargazers;
 
         Ok(stargazers)
@@ -172,9 +164,7 @@ impl<U: IntoUrl + Copy> GitHubClient<U> {
 
             total_count = page.total_count;
 
-            let edges = page
-                .edges
-                .ok_or(ApiResponseError::EmptyNode(format!("edges")))?;
+            let edges = page.edges.ok_or(anyhow!("missing edges field"))?;
 
             for edge in edges.iter() {
                 match edge {
@@ -214,13 +204,13 @@ impl<U: IntoUrl + Copy> GitHubClient<U> {
 
         let target = response
             .data
-            .ok_or(ApiResponseError::NoData)?
+            .ok_or(anyhow!("response has no data"))?
             .repository
-            .ok_or(ApiResponseError::EmptyNode(format!("repository")))?
+            .ok_or(anyhow!("missing repository field"))?
             .default_branch_ref
-            .ok_or(ApiResponseError::EmptyNode(format!("default_branch_ref")))?
+            .ok_or(anyhow!("missing default_branch_ref field"))?
             .target
-            .ok_or(ApiResponseError::EmptyNode(format!("target")))?;
+            .ok_or(anyhow!("missing target field"))?;
 
         match target {
             commit_history_query::CommitHistoryQueryRepositoryDefaultBranchRefTarget::Commit(
@@ -252,9 +242,7 @@ impl<U: IntoUrl + Copy> GitHubClient<U> {
                 previous_cursor = page_info.start_cursor;
                 cursor = page_info.end_cursor;
             } else {
-                let nodes = history
-                    .nodes
-                    .ok_or(ApiResponseError::EmptyNode(format!("nodes")))?;
+                let nodes = history.nodes.ok_or(anyhow!("missing nodes fiel"))?;
                 for node in nodes.iter() {
                     if let Some(commit_node) = node {
                         commits.push(commit_node.clone());
@@ -270,12 +258,9 @@ impl<U: IntoUrl + Copy> GitHubClient<U> {
                     let previous_history = self
                         .get_commit_history(owner.clone(), name.clone(), previous_cursor)
                         .await?;
-                    let previous_nodes =
-                        previous_history
-                            .nodes
-                            .ok_or(ApiResponseError::EmptyNode(format!(
-                                "nodes in previous history"
-                            )))?;
+                    let previous_nodes = previous_history
+                        .nodes
+                        .ok_or(anyhow!("missing nodes field in previous history"))?;
                     for node in previous_nodes.iter() {
                         if let Some(commit_node) = node {
                             commits.push(commit_node.clone());

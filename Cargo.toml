@@ -17,7 +17,6 @@ plotters = { version = "0.3.7", default-features = false, features = ["datetime"
 reqwest = { version = "0.11.27", features = ["json"] }
 serde = "1.0.213"
 serde_json = "1.0.132"
-thiserror = "1.0.65"
 tokio = { version = "1.41.0", features = ["full"] }
 tracing = { git = "https://github.com/tokio-rs/tracing.git" }
 tracing-subscriber = { git = "https://github.com/tokio-rs/tracing.git" }

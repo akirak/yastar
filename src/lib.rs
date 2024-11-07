@@ -1,19 +1,13 @@
 //! Business logic of the application.
 
+use anyhow::anyhow;
 use db::{get_newly_starred_original_repositories, StargazerEntry};
 use duckdb::Connection;
-use thiserror::Error;
 use tracing::info;
 
 mod api;
 pub mod chart;
 mod db;
-
-#[derive(Debug, Error)]
-enum Error {
-    #[error("No meaningful data")]
-    NoMeaningfulData,
-}
 
 fn check_commit_author(login: &str, commit: &api::github::CommitEntry) -> bool {
     match commit.author {
@@ -176,7 +170,7 @@ pub fn render_star_history_by_language(db: &mut Connection, path: &str) -> anyho
     let vec = db::collect_star_history_by_language(db, 10)?;
 
     if vec.len() < 2 {
-        Err(Error::NoMeaningfulData)?;
+        Err(anyhow!("No meaningful data"))?;
     }
 
     chart::draw_star_history_by_language(vec, path)?;
@@ -190,7 +184,7 @@ pub fn render_total_star_history(db: &mut Connection, path: &str) -> anyhow::Res
     let vec = db::collect_total_star_history(db)?;
 
     if vec.len() < 2 {
-        Err(Error::NoMeaningfulData)?;
+        Err(anyhow!("No meaningful data"))?;
     }
 
     chart::draw_total_star_history(vec, path)?;
