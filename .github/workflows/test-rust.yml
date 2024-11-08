@@ -3,11 +3,13 @@ on:
   pull_request:
     paths-ignore:
       - 'README.*'
+      - 'docs/**'
   push:
     branches:
       - master
     paths-ignore:
       - 'README.*'
+      - 'docs/**'
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
