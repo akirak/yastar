@@ -5,8 +5,8 @@ GitHub account and generates charts. It renders a stargazer history of your
 public original repositories, optionally grouped by primary language. See
 examples:
 
-![Number of stargazers by language](./doc/images/language.svg)
-![Total number of stargazers](./doc/images/total.svg)
+![Number of stargazers by language](./docs/images/language.svg)
+![Total number of stargazers](./docs/images/total.svg)
 
 It's not fancy, but it provides **useful insights on your expertise**.
 
