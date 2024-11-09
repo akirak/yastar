@@ -49,7 +49,8 @@ pub fn setup(conn: &Connection) {
              AND l.name = s.name
            INNER JOIN original_statuses o ON l.owner = o.owner
              AND l.name = o.name
-             AND o.original
+         WHERE
+           o.original
          GROUP BY
            l.primary_language
          ORDER BY
