@@ -119,6 +119,6 @@ authored by yourself.
 
 ## TODO
 
-[ ] Allow customization of the charts to make them more beautiful.
-[ ] Allow customization of the threshold.
-[ ] Add thorough documentation on CI setup.
+- [ ] Allow customization of the charts to make them more beautiful.
+- [ ] Allow customization of the threshold.
+- [ ] Add thorough documentation on CI setup.
