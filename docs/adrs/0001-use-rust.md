@@ -32,4 +32,3 @@ is also a plus, because I plan on running this application on browser.
   impossible to apply a function on the same object multiple times by naively
   looping over an iterator. The library API needs to be designed to handle this
   situation.
-* … <!-- numbers of consequences can vary -->
