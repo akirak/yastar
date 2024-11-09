@@ -4,6 +4,7 @@ query StarredOwnReposQuery($after: String) {
     repositories(
       affiliations: OWNER,
       visibility: PUBLIC,
+      isFork: false,
       first: 20,
       after: $after,
       orderBy: {field: STARGAZERS, direction: DESC}
