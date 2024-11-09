@@ -36,10 +36,8 @@ pub fn setup(conn: &Connection) {
            starred_by text NOT NULL,
          );
 
-         -- Drop the obsolete view definition.
          DROP VIEW IF EXISTS total_stars_by_language;
-
-         CREATE VIEW IF NOT EXISTS total_stars_by_language_2 AS
+         CREATE VIEW total_stars_by_language AS
          SELECT
            l.primary_language,
            sum(s.stargazers) AS stargazers
@@ -240,7 +238,7 @@ pub fn collect_star_history_by_language(
                   SELECT
                     primary_language
                   FROM
-                    total_stars_by_language_2
+                    total_stars_by_language
                   WHERE
                     stargazers >= $1)
                 GROUP BY
