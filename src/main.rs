@@ -48,7 +48,8 @@ enum Commands {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
-    dotenvy::dotenv()?;
+    // continue even if .env does not exist
+    let _ = dotenvy::dotenv();
     tracing_subscriber::fmt::init();
 
     let cli = Cli::parse();
