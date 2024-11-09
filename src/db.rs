@@ -36,7 +36,10 @@ pub fn setup(conn: &Connection) {
            starred_by text NOT NULL,
          );
 
-         CREATE VIEW IF NOT EXISTS total_stars_by_language AS
+         -- Drop the obsolete view definition.
+         DROP VIEW IF EXISTS total_stars_by_language;
+
+         CREATE VIEW IF NOT EXISTS total_stars_by_language_2 AS
          SELECT
            l.primary_language,
            sum(s.stargazers) AS stargazers
@@ -44,6 +47,9 @@ pub fn setup(conn: &Connection) {
            repository_primary_languages l
            INNER JOIN star_counts s ON l.owner = s.owner
              AND l.name = s.name
+           INNER JOIN original_statuses o ON l.owner = o.owner
+             AND l.name = o.name
+             AND o.original
          GROUP BY
            l.primary_language
          ORDER BY
@@ -233,7 +239,7 @@ pub fn collect_star_history_by_language(
                   SELECT
                     primary_language
                   FROM
-                    total_stars_by_language
+                    total_stars_by_language_2
                   WHERE
                     stargazers >= $1)
                 GROUP BY
