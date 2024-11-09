@@ -94,9 +94,11 @@ yastar chart --help
 
 **This program is heavy on API usage**, especially if you have repositories with
 thousands (or more) of commits. To prevent from hitting the API limit of GitHub
-and also reduce the execution time, it is recommended to keep the database to an
-object storage and restore it on every CI run. YAStar tries to fetch only new
-activities, so you can save the usage by keeping the database file.
+and also reduce the execution time, it is recommended to keep the database to a
+cache. YAStar tries to fetch only new activities, so you can save the usage by
+keeping the database file.
+
+An example setup is in [my repository](https://github.com/akirak/akirak).
 
 ## Technical Notes
 
