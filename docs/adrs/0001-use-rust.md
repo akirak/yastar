@@ -8,8 +8,8 @@ accepted
 
 ## Context and Problem Statement
 
-Choose a programming language (and framework) to fetch data from the GitHub API
-and feed it into a DuckDB database.
+Choose a programming language (and framework if applicable) used to fetch data
+from the GitHub API and feed it into a DuckDB database.
 
 ## Considered Options
 
@@ -19,9 +19,10 @@ and feed it into a DuckDB database.
 
 ## Decision Outcome
 
-Choose Rust, because it has a strong type system, reliable error handling, [a
-working DuckDB integration](https://duckdb.org/docs/api/rust). Its WASM support
-is also a plus, because I plan on running this application on browser.
+Choose Rust, because it has a strong type system, reliable error handling, and
+[a working DuckDB integration](https://duckdb.org/docs/api/rust). Its WASM
+support is also a plus, because I also plan on running this application on
+browser.
 
 <!-- This is an optional element. Feel free to remove. -->
 ### Consequences
