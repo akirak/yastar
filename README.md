@@ -1,22 +1,13 @@
 # YAStar: GitHub Star History for Your GitHub Profile
 
 YAStar (Yet Another Star History) is a program that collects data from your
-GitHub account and generates charts. It renders a stargazer history of your
-public original repositories, optionally grouped by primary language. See
-examples:
-
-![Number of stargazers by language](./docs/images/language.svg)
-![Total number of stargazers](./docs/images/total.svg)
-
-It's not fancy, but it provides **useful insights on your expertise**.
+GitHub account for generating a chart of total stargazer history of your
+repositories. This program produces a [DuckDB](https://duckdb.org/) database.
+[My profile readme](https://github.com/akirak/akirak/blob/master/README.md)
+currently uses this.
 
 It is a command-line program that is designed to be run on CI. With a small
 setup, you can add the generated image to your GitHub readme.
-
-**This program produces a [DuckDB](https://duckdb.org/) database.** If you don't
-like the charts produced by it, you can **use this program to fetch your account
-data and then write your own scripts** to produce presentations such as charts,
-tables, etc. for your slides and articles.
 
 **DISCLAIMER: This project has nothing to do with YaST, a configuration tool for
 openSUSE and SUSE operating systems.**
@@ -61,15 +52,26 @@ This program also supports `.env`, so you can set the environment variables in
 
 ## Usage
 
-### Local Usage
-
-First update the database from your GitHub account:
+Update the database from your GitHub account:
 
 ``` shell
 yastar update
 ```
 
-Then render a star history chart:
+For an integration example, check out [my
+repository](https://github.com/akirak/akirak).
+
+**This program is heavy on API usage**, especially if you have repositories with
+thousands (or more) of commits. To prevent from hitting the API limit of GitHub
+and also reduce the execution time, it is recommended to keep the database to a
+cache. YAStar tries to fetch only new activities, so you can save the usage by
+keeping the database file.
+
+### Generating a chart (deprecated)
+
+This program also supports generating a chart from the database.
+
+Render a star history chart:
 
 ``` shell
 yastar chart FILENAME.svg
@@ -89,17 +91,6 @@ You can browse the command line options with `--help`:
 ``` shell
 yastar chart --help
 ```
-
-### CI
-
-**This program is heavy on API usage**, especially if you have repositories with
-thousands (or more) of commits. To prevent from hitting the API limit of GitHub
-and also reduce the execution time, it is recommended to keep the database to a
-cache. YAStar tries to fetch only new activities, so you can save the usage by
-keeping the database file.
-
-An example setup is in [my repository](https://github.com/akirak/akirak).
-
 ## Technical Notes
 
 - Unlike the popular [GitHub Readme
@@ -113,12 +104,3 @@ authored by yourself.
 - The number of stars shown on the chart can be larger than actual stars shown
   on your repositories. This is because the GitHub API returns activities of
   even removed stars.
-
-- Languages with a small number of stargazers are not rendered on the language
-  chart. The threshold is 10 stars at present.
-
-## TODO
-
-- [ ] Allow customization of the charts to make them more beautiful.
-- [ ] Allow customization of the threshold.
-- [ ] Add thorough documentation on CI setup.
