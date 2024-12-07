@@ -1,5 +1,5 @@
 use anyhow::anyhow;
-use graphql_client::{reqwest::post_graphql, GraphQLQuery, Response};
+use graphql_client::{GraphQLQuery, Response};
 use reqwest::IntoUrl;
 
 pub const GRAPHQL_ENDPOINT: &str = "https://api.github.com/graphql";
@@ -51,7 +51,7 @@ struct StargazersQuery;
 
 pub type StargazerEntry = stargazers_query::StargazersQueryRepositoryStargazersEdges;
 
-impl<U: IntoUrl + Copy> GitHubClient<U> {
+impl<U: IntoUrl + Copy + reqwest::IntoUrl> GitHubClient<U> {
     // Most of this code has been just stolen from
     // https://github.com/graphql-rust/graphql-client/blob/main/examples/github/examples/github.rs
     pub fn new(endpoint: U) -> anyhow::Result<Self> {
@@ -79,8 +79,16 @@ impl<U: IntoUrl + Copy> GitHubClient<U> {
     ) -> anyhow::Result<Response<starred_own_repos_query::ResponseData>> {
         let variables = starred_own_repos_query::Variables { after };
 
-        let response =
-            post_graphql::<StarredOwnReposQuery, U>(&self.client, self.endpoint, variables).await?;
+        let response = {
+            let client = &self.client;
+            let url = self.endpoint;
+            async move {
+                let body = <StarredOwnReposQuery>::build_query(variables);
+                let reqwest_response = client.post(url).json(&body).send().await?;
+                reqwest_response.json().await
+            }
+        }
+        .await?;
 
         Ok(response)
     }
@@ -130,8 +138,16 @@ impl<U: IntoUrl + Copy> GitHubClient<U> {
             before,
         };
 
-        let response =
-            post_graphql::<StargazersQuery, U>(&self.client, self.endpoint, variables).await?;
+        let response: Response<stargazers_query::ResponseData> = {
+            let client = &self.client;
+            let url = self.endpoint;
+            async move {
+                let body = <StargazersQuery>::build_query(variables);
+                let reqwest_response = client.post(url).json(&body).send().await?;
+                reqwest_response.json().await
+            }
+        }
+        .await?;
 
         let stargazers = response
             .data
@@ -199,8 +215,16 @@ impl<U: IntoUrl + Copy> GitHubClient<U> {
     > {
         let variables = commit_history_query::Variables { owner, name, after };
 
-        let response =
-            post_graphql::<CommitHistoryQuery, U>(&self.client, self.endpoint, variables).await?;
+        let response: Response<commit_history_query::ResponseData> = {
+            let client = &self.client;
+            let url = self.endpoint;
+            async move {
+                let body = <CommitHistoryQuery>::build_query(variables);
+                let reqwest_response = client.post(url).json(&body).send().await?;
+                reqwest_response.json().await
+            }
+        }
+        .await?;
 
         let target = response
             .data
