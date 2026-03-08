@@ -1,3 +1,6 @@
+**I am no longer interested in maintaining this project, so the repository has
+been archived.**
+
 # YAStar: GitHub Star History for Your GitHub Profile
 
 YAStar (Yet Another Star History) is a program that collects data from your
